@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center mb-4">{{ nombre }}</h1>
+        <p class="text-lg mb-2">Instagram: {{ instagram }}</p>
+        <p class="text-lg mb-2">Otra Red Social: {{ otra_red }}</p>
+        <p class="text-lg mb-2">Edad: {{ edad }}</p>
+        <div class="text-center">
+            <a href="/" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">Volver</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campamento Distrital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center mb-2">Campamento Distrital</h1>
+        <p class="text-center text-gray-600 mb-8">Me equivoque de lugar?</p>
+        
+        <form id="qrForm">
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-semibold mb-2" for="nombre">¿Cuál es tu nombre?</label>
+                <input class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="nombre" type="text" placeholder="• Obligatorio" required aria-label="Nombre">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-semibold mb-2" for="instagram">¿Usuario de Instagram?</label>
+                <input class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="instagram" type="text" placeholder="• Opcional" aria-label="Usuario de Instagram">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-semibold mb-2" for="otra-red">¿Otra Red Social?</label>
+                <input class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="otra-red" type="text" placeholder="• Opcional" aria-label="Otra Red Social">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-semibold mb-2" for="edad">Edad</label>
+                <input class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="edad" type="number" placeholder="• Opcional" aria-label="Edad">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-semibold mb-2" for="qrColor">Color del QR</label>
+                <input class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="qrColor" type="color" value="#000000" aria-label="Color del QR">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="bg-blue-300 text-white font-bold py-2 px-4 rounded-full text-xl focus:outline-none focus:ring-2 focus:ring-blue-500">Generar QR</button>
+            </div>
+        </form>
+        
+        <div id="qrCode" class="mt-8 flex justify-center"></div>
+        <div id="feedback" class="text-center text-green-500 mt-4"></div>
+        <div class="text-center mt-4">
+            <button id="downloadBtn" class="bg-blue-300 text-white font-bold py-2 px-4 rounded-full text-xl focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">Descargar QR</button>
+            <div id="presentationLink" class="hidden mt-2">
+                <a href="#" id="viewPresentation" class="text-blue-500 underline" target="_blank">Ver mi presentación</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('qrForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const nombre = document.getElementById('nombre').value.replace(/\s+/g, '-').toLowerCase(); // Formato del nombre para la URL
+            const instagram = document.getElementById('instagram').value;
+            const otraRed = document.getElementById('otra-red').value;
+            const edad = document.getElementById('edad').value;
+            const qrColor = document.getElementById('qrColor').value;
+            const qrSize = 200; // Tamaño fijo del QR
+
+            if (!nombre) {
+                const feedbackDiv = document.getElementById('feedback');
+                feedbackDiv.textContent = 'El nombre es obligatorio.';
+                feedbackDiv.classList.add('text-red-500');
+                return;
+            }
+
+            // URL de la presentación
+            const qrData = `https://tusitio.com/presentacion.html?nombre=${nombre}&instagram=${instagram}&otraRed=${otraRed}&edad=${edad}`;
+            
+            try {
+                const qr = new QRious({
+                    element: document.createElement('canvas'),
+                    value: qrData,
+                    size: qrSize,
+                    background: 'white',
+                    foreground: qrColor
+                });
+                
+                const qrCodeDiv = document.getElementById('qrCode');
+                qrCodeDiv.innerHTML = '';
+                qrCodeDiv.appendChild(qr.element);
+
+                const feedbackDiv = document.getElementById('feedback');
+                feedbackDiv.textContent = 'QR generado con éxito!';
+                feedbackDiv.classList.remove('text-red-500');
+                feedbackDiv.classList.add('text-green-500');
+
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.classList.remove('hidden');
+                downloadBtn.onclick = function() {
+                    const link = document.createElement('a');
+                    link.download = 'qr-code.png';
+                    link.href = qr.toDataURL('image/png');
+                    link.click();
+                };
+
+                // Mostrar el enlace a la presentación
+                const presentationLinkDiv = document.getElementById('presentationLink');
+                presentationLinkDiv.classList.remove('hidden');
+                const viewPresentation = document.getElementById('viewPresentation');
+                viewPresentation.href = qrData; // Usar la misma URL generada para el QR
+            } catch (error) {
+                const feedbackDiv = document.getElementById('feedback');
+                feedbackDiv.textContent = 'Error al generar el QR.';
+                feedbackDiv.classList.add('text-red-500');
+            }
+        });
+    </script>
+</body>
+</html>
