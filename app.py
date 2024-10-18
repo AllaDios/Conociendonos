@@ -1,24 +1,22 @@
+import os
 from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Ruta para la página de inicio
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Ruta para la página de presentación
 @app.route('/presentacion')
 def presentacion():
-    # Datos que se mostrarán en la plantilla de presentación
     datos = {
-        "nombre": " ",
-        "instagram": "@",
-        "otra_red": "@",
-        "edad": None
+        "nombre": "Juan Pérez",
+        "instagram": "@juanperez",
+        "otra_red": "Twitter: @juanperez",
+        "edad": 30
     }
     return render_template('presentacion.html', **datos)
 
-# Comprobamos que el archivo se ejecuta directamente
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
